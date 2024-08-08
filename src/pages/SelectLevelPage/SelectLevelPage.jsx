@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./SelectLevelPage.module.css";
 import { useContext, useState } from "react";
 import { EasyContext } from "../../context/Context";
 import clsx from "clsx";
+import { Button } from "../../components/Button/Button";
 const levels = [
   {
     level: 1,
@@ -45,7 +46,8 @@ export function SelectLevelPage() {
           <div className={styles.checkbox}></div>
         </label>
 
-        <button onClick={onStart}>Начать игру</button>
+        <Button onClick={onStart}>Начать игру</Button>
+        <Link to={"/leaderboard"}>Перейти к Лидерборду</Link>
       </div>
     </div>
   );
