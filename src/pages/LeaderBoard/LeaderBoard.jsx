@@ -22,9 +22,11 @@ const LeaderBoard = () => {
       <div>
         <ul>
           <li>
-            <div>Позиция</div>
-            <div>Пользователь</div>
-            <div>Время</div>
+            <div className={styles.leaders}>
+              <h1>Позиция</h1>
+              <h1>Пользователь</h1>
+              <h1>Время</h1>
+            </div>
           </li>
           {leaders.map((l, index) => (
             <li>

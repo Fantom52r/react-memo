@@ -1,4 +1,15 @@
 .top {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.leaders {
+  width: Hug (904px)px;
+height: Hug (32px)px;
+top: 237px;
+left: 60px;
+gap: 66px;
+opacity: 0px;
+color: #FFFFFF;
 }
