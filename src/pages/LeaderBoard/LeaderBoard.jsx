@@ -8,31 +8,34 @@ const LeaderBoard = () => {
   const [leaders, setLeaders] = useState([]);
   useEffect(() => {
     getLeaders().then(data => {
-      setLeaders(data.sort((a, b) => a - b).splice(0, 10));
+      setLeaders(data.sort((a, b) => a - b));
     });
   }, []);
+  console.log(leaders);
   return (
-    <div>
-      <div className={styles.top}>
+    <div className={styles.leaderBoardBlock}>
+      <div className={styles.leaderBoarHeader}>
         <h1>Лидерборд</h1>
         <Link to={"/"}>
           <Button>Начать игру</Button>
         </Link>
       </div>
       <div>
-        <ul>
+        <ul className={styles.players}>
           <li>
-            <div className={styles.leaders}>
-              <h1>Позиция</h1>
-              <h1>Пользователь</h1>
-              <h1>Время</h1>
-            </div>
+            <ul className={styles.leaders}>
+              <li>Позиция</li>
+              <li>Пользователь</li>
+              <li>Время</li>
+            </ul>
           </li>
           {leaders.map((l, index) => (
             <li>
-              <div>{index + 1}</div>
-              <div>{l.name}</div>
-              <div>{l.time}</div>
+              <ul>
+                <li>{index + 1}</li>
+                <li>{l.name}</li>
+                <li>{l.time}</li>
+              </ul>
             </li>
           ))}
         </ul>
