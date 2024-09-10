@@ -62,3 +62,31 @@
 .levelLink:visited {
   color: #0080c1;
 }
+
+.active {
+  outline: 4px dotted teal
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1px dotted teal;
+  background-color: white;
+position: relative;
+}
+.label {
+  display: flex;
+  gap:10px;
+}
+.label input  {
+appearance: none;
+}
+.label input:checked + div::after{
+content:"\2714";
+display: block;
+position: absolute;
+top: 50%;
+left: 50%;
+transform:translate(-50%,-50%)
+}
