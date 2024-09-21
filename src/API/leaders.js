@@ -14,4 +14,16 @@ export async function getLeaders() {
     throw new Error(error.message);
   }
 }
-// Написать функцию postNewLeader- будет отправлять на сервер новый результат
+
+//добавление лидера в список
+export const addLeader = async data => {
+  const response = await fetch("https://wedev-api.sky.pro/api/leaderboard/", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Упс, ошибка");
+  }
+  return response.json();
+};
