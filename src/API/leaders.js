@@ -1,6 +1,6 @@
 export async function getLeaders() {
   try {
-    const response = await fetch("https://wedev-api.sky.pro/api/leaderboard", {
+    const response = await fetch("https://wedev-api.sky.pro/api/leaderboard/", {
       method: "GET",
     });
     const isResponseOk = response.ok;
