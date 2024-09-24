@@ -1,12 +1,15 @@
 .modal {
   width: 480px;
-  height: 459px;
+  min-height: 459px;
   border-radius: 12px;
   background: #c2f5ff;
   display: flex;
+  gap: 10px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-top: 18px;
+  padding-bottom: 28px;
 }
 
 .image {
@@ -23,8 +26,9 @@
   font-style: normal;
   font-weight: 400;
   line-height: 48px;
-
   margin-bottom: 28px;
+  width: 276px;
+  text-align: center;
 }
 
 .description {
@@ -48,4 +52,38 @@
   line-height: 72px;
 
   margin-bottom: 40px;
+}
+
+.btnLeaderBoard {
+  padding-top: 10px;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 18px;
+  font-family: Roboto;
+  font-weight: 400;
+  line-height: 32px;
+  text-align: left;
+  color: #565eef;
+}
+.userBlockName {
+  margin-bottom: 10px;
+}
+.input {
+  width: 276px;
+  height: 45px;
+  top: 334px;
+  left: 374px;
+  gap: 0px;
+  border-radius: 10px;
+  opacity: 0px;
+  border: none;
+  margin-bottom: 30px;
+  font-family: Roboto;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  text-align: center;
+  color: #999999;
 }
