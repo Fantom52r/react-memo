@@ -1,11 +1,13 @@
 import { shuffle } from "lodash";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { generateDeck } from "../../utils/cards";
 import styles from "./Cards.module.css";
 import { EndGameModal } from "../../components/EndGameModal/EndGameModal";
 import { Button } from "../../components/Button/Button";
 import { Card } from "../../components/Card/Card";
 import { EasyContext } from "../../context/Context";
+import alohomora from "./images/alohomora.png";
+import showallcard from "./images/showallcard.png";
 
 // Игра закончилась
 const STATUS_LOST = "STATUS_LOST";
@@ -14,6 +16,27 @@ const STATUS_WON = "STATUS_WON";
 const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
 // Начало игры: игрок видит все карты в течении нескольких секунд
 const STATUS_PREVIEW = "STATUS_PREVIEW";
+
+const FIRST_HINT = {
+  title: "Прозрение",
+  description: "На 5 секунд показываются все карты. Таймер длительности игры на это время останавливается.",
+};
+
+const SECOND_HINT = {
+  title: "Алохомора",
+  description: " Открывается случайная пара карт.",
+};
+
+// const hintPopUp = ({ text }) => {
+//   return (
+//     <div className={styles.popUpHint}>
+//       <div className={styles.popUpHintContent}>
+//         <h2 className={styles.popUpHintContenTitle}>{text.title}</h2>
+//         <p className={styles.popUpHintContentDescription}></p>
+//       </div>
+//     </div>
+//   );
+// };
 
 function getTimerValue(startDate, endDate) {
   if (!startDate && !endDate) {
@@ -42,7 +65,7 @@ function getTimerValue(startDate, endDate) {
  * previewSeconds - сколько секунд пользователь будет видеть все карты открытыми до начала игры
  */
 export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
-  const { isEasyMode, tries, setTries } = useContext(EasyContext);
+  const { isEasyMode, tries, setTries, setUsedHints } = useContext(EasyContext);
   // В cards лежит игровое поле - массив карт и их состояние открыта\закрыта
   const [cards, setCards] = useState([]);
   // Текущий статус игры
@@ -52,6 +75,8 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   const [gameStartDate, setGameStartDate] = useState(null);
   // Дата конца игры
   const [gameEndDate, setGameEndDate] = useState(null);
+
+  const [showHint, setShowHint] = useState({ isShow: false, text: "" });
 
   // Стейт для таймера, высчитывается в setInteval на основе gameStartDate и gameEndDate
   const [timer, setTimer] = useState({
@@ -198,8 +223,28 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
     };
   }, [gameStartDate, gameEndDate]);
 
+  // if (showHint.isShow) {
+  //   return (
+  //     <div className={styles.popUpHint}>
+  //       <div className={styles.popUpHintContent}>
+  //         <h2 className={styles.popUpHintContenTitle}>{showHint.title}</h2>
+  //         <p className={styles.popUpHintContentDescription}>{showHint.description}</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+  const handleMouseOver = useCallback(() => {
+    if (!showHint.isShow || showHint.id !== 1) {
+      setShowHint({ isShow: true, id: 1, ...FIRST_HINT });
+    }
+  }, [showHint]);
+
+  const handleMouseOut = useCallback(() => {
+    setShowHint({ isShow: false, id: null });
+  }, []);
   return (
     <div className={styles.container}>
+      {showHint.isShow && <div className={styles.popUpHint}></div>}
       <div className={styles.header}>
         <div className={styles.timer}>
           {status === STATUS_PREVIEW ? (
@@ -221,6 +266,31 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
             </>
           )}
         </div>
+        <div className={styles.cheatBox}>
+          <button
+            onClick={() => setUsedHints(true)}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            className={styles.showAllCard}
+          >
+            <img src={showallcard} alt="showallcard" />
+            {showHint.isShow && showHint.id === 1 && (
+              <div className={styles.popUpHintContent}>
+                <h2 className={styles.popUpHintContenTitle}>{showHint.title}</h2>
+                <p className={styles.popUpHintContentDescription}>{showHint.description}</p>
+              </div>
+            )}
+          </button>
+
+          <button
+            onClick={() => setUsedHints(true)}
+            onMouseOver={() => setShowHint({ isShow: true, ...SECOND_HINT, id: 2 })}
+            className={styles.alohomora}
+          >
+            <img src={alohomora} alt="alohomora" />
+          </button>
+        </div>
+
         {status === STATUS_IN_PROGRESS ? <Button onClick={resetGame}>Начать заново</Button> : null}
         {isEasyMode && <span>Колличество жизней: {tries}</span>}
       </div>

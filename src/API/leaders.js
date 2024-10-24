@@ -1,6 +1,6 @@
 export async function getLeaders() {
   try {
-    const response = await fetch("https://wedev-api.sky.pro/api/leaderboard/", {
+    const response = await fetch("https://wedev-api.sky.pro/api/v2/leaderboard/", {
       method: "GET",
     });
     const isResponseOk = response.ok;
@@ -17,7 +17,7 @@ export async function getLeaders() {
 
 //добавление лидера в список
 export const addLeader = async data => {
-  const response = await fetch("https://wedev-api.sky.pro/api/leaderboard/", {
+  const response = await fetch("https://wedev-api.sky.pro/api/v2/leaderboard/", {
     method: "POST",
     body: JSON.stringify(data),
   });
