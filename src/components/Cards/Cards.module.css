@@ -122,18 +122,25 @@
   bottom: -230px;
   z-index: 6000;
   border-radius: 12px;
+  opacity: 0;
+  visibility: hidden;
+}
+.showAllCard:hover .popUpHintContent {
+  opacity: 1;
+  visibility: visible;
 }
 
-.popUpHintContenTitle{
-font-size: 18px;
-font-weight: 700;
-line-height: 24px;
-color: #004980;
+
+.popUpHintContenTitle {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #004980;
 }
 
-.popUpHintContentDescription{
-font-size: 18px;
-font-weight: 400;
-line-height: 24px;
-margin-top: 10px;
+.popUpHintContentDescription {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-top: 10px;
 }

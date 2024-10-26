@@ -1,5 +1,5 @@
 import { shuffle } from "lodash";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { generateDeck } from "../../utils/cards";
 import styles from "./Cards.module.css";
 import { EndGameModal } from "../../components/EndGameModal/EndGameModal";
@@ -233,15 +233,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   //     </div>
   //   );
   // }
-  const handleMouseOver = useCallback(() => {
-    if (!showHint.isShow || showHint.id !== 1) {
-      setShowHint({ isShow: true, id: 1, ...FIRST_HINT });
-    }
-  }, [showHint]);
 
-  const handleMouseOut = useCallback(() => {
-    setShowHint({ isShow: false, id: null });
-  }, []);
   return (
     <div className={styles.container}>
       {showHint.isShow && <div className={styles.popUpHint}></div>}
@@ -269,25 +261,28 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
         <div className={styles.cheatBox}>
           <button
             onClick={() => setUsedHints(true)}
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
+            onMouseOver={() => setShowHint({ isShow: true, ...FIRST_HINT, id: 1 })}
+            onMouseOut={() => setShowHint({ isShow: false })}
             className={styles.showAllCard}
           >
             <img src={showallcard} alt="showallcard" />
-            {showHint.isShow && showHint.id === 1 && (
-              <div className={styles.popUpHintContent}>
-                <h2 className={styles.popUpHintContenTitle}>{showHint.title}</h2>
-                <p className={styles.popUpHintContentDescription}>{showHint.description}</p>
-              </div>
-            )}
+            <div className={styles.popUpHintContent}>
+              <h2 className={styles.popUpHintContenTitle}>{showHint.title}</h2>
+              <p className={styles.popUpHintContentDescription}>{showHint.description}</p>
+            </div>
           </button>
 
           <button
             onClick={() => setUsedHints(true)}
             onMouseOver={() => setShowHint({ isShow: true, ...SECOND_HINT, id: 2 })}
+            onMouseOut={() => setShowHint({ isShow: false })}
             className={styles.alohomora}
           >
             <img src={alohomora} alt="alohomora" />
+            <div className={styles.popUpHintContent}>
+              <h2 className={styles.popUpHintContenTitle}>{showHint.title}</h2>
+              <p className={styles.popUpHintContentDescription}>{showHint.description}</p>
+            </div>
           </button>
         </div>
 
