@@ -82,12 +82,11 @@
 .popUpHint {
   opacity: 0.6;
   background-color: #004980;
-  width: 150vh;
-  height: 150vh;
+  width: 100%;
+  height: 100vh;
   z-index: 5000;
   display: none;
-  position: absolute;
-  /* overflow: hidden; */
+  position: fixed;
 }
 
 .showAllCard {
@@ -101,6 +100,7 @@
   position: relative;
   cursor: pointer;
   border: none;
+  z-index: 7000;
 }
 
 .alohomora {
@@ -114,6 +114,7 @@
   position: relative;
   cursor: pointer;
   border: none;
+  z-index: 7000;
 }
 
 .popUpHintContent {
@@ -144,7 +145,7 @@
 .popUpHintActiveFirst {
   display: none;
 }
-.showAllCard:hover .popUpHint {
+.showAllCard:active .popUpHint {
   display: block;
 }
 .showAllCard:hover .popUpHintActiveFirst {

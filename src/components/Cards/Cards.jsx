@@ -8,6 +8,7 @@ import { Card } from "../../components/Card/Card";
 import { EasyContext } from "../../context/Context";
 import alohomora from "./images/alohomora.png";
 import showallcard from "./images/showallcard.png";
+import Modal from "../modal/Modal";
 
 // Игра закончилась
 const STATUS_LOST = "STATUS_LOST";
@@ -259,8 +260,6 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
         </div>
         <div className={styles.cheatBox}>
           <button onClick={() => setUsedHints(true)} className={styles.showAllCard}>
-            <div className={styles.popUpHint}></div>
-
             <img src={showallcard} alt="showallcard" />
 
             <div className={`${styles.popUpHintContent} ${styles.popUpHintActiveFirst}`}>
@@ -269,19 +268,16 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
             </div>
           </button>
 
-          <button
-            onClick={() => setUsedHints(true)}
-            // onMouseOver={() => setShowHint({ isShow: true, ...SECOND_HINT, id: 2 })}
-            // onMouseOut={() => setShowHint({ isShow: false })}
-            className={styles.alohomora}
-          >
+          <button onClick={() => setUsedHints(true)} className={styles.alohomora}>
             <img src={alohomora} alt="alohomora" />
             <div className={`${styles.popUpHintContent} ${styles.popUpHintActiveSecond}`}>
               <h2 className={styles.popUpHintContenTitle}>{SECOND_HINT.title}</h2>
               <p className={styles.popUpHintContentDescription}>{SECOND_HINT.description}</p>
             </div>
-            <div className={styles.popUpHint}></div>
           </button>
+          <Modal>
+            <div className={styles.popUpHint}></div>
+          </Modal>
         </div>
 
         {status === STATUS_IN_PROGRESS ? <Button onClick={resetGame}>Начать заново</Button> : null}
