@@ -85,6 +85,11 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
     minutes: 0,
   });
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseOver = () => setIsHovered(true);
+  const handleMouseOut = () => setIsHovered(false);
+
   function finishGame(status = STATUS_LOST) {
     setGameEndDate(new Date());
     setStatus(status);
@@ -234,7 +239,36 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   //     </div>
   //   );
   // }
+  const [isUsedHint, setIsUsedHint] = useState(0);
 
+  const handleClickAlohomora = () => {
+    if (isUsedHint > 2) return;
+    setUsedHints(true);
+    console.log(cards);
+    const obj = {};
+    const filtredCards = cards.filter(element => !element.open);
+    for (let i = 0; i < filtredCards.length; i++) {
+      if (obj[filtredCards[i].suit + " " + filtredCards[i].rank]) {
+        obj[filtredCards[i].suit + " " + filtredCards[i].rank] += 1;
+      } else {
+        obj[filtredCards[i].suit + " " + filtredCards[i].rank] = 1;
+      }
+    }
+    const onlyPairsCards = Object.entries(obj).filter(([key, value]) => value === 2);
+    const randomPair = onlyPairsCards[Math.floor(Math.random() * onlyPairsCards.length)][0]; // Почему в этом случае лучше использовать Math.floor?
+    const suitOfRandomPair = randomPair.split(" ")[0];
+    const rankOfRandomPair = randomPair.split(" ")[1];
+
+    const newCards = cards.map(el => {
+      if (el.suit === suitOfRandomPair && el.rank === rankOfRandomPair) {
+        return { ...el, open: true };
+      } else {
+        return el;
+      }
+    });
+    setIsUsedHint(prev => prev + 1);
+    setCards(newCards);
+  };
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -259,7 +293,12 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
           )}
         </div>
         <div className={styles.cheatBox}>
-          <button onClick={() => setUsedHints(true)} className={styles.showAllCard}>
+          <button
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            onClick={() => setUsedHints(true)}
+            className={styles.showAllCard}
+          >
             <img src={showallcard} alt="showallcard" />
 
             <div className={`${styles.popUpHintContent} ${styles.popUpHintActiveFirst}`}>
@@ -268,16 +307,18 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
             </div>
           </button>
 
-          <button onClick={() => setUsedHints(true)} className={styles.alohomora}>
+          <button
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            onClick={handleClickAlohomora}
+            className={styles.alohomora}
+          >
             <img src={alohomora} alt="alohomora" />
             <div className={`${styles.popUpHintContent} ${styles.popUpHintActiveSecond}`}>
               <h2 className={styles.popUpHintContenTitle}>{SECOND_HINT.title}</h2>
               <p className={styles.popUpHintContentDescription}>{SECOND_HINT.description}</p>
             </div>
           </button>
-          <Modal>
-            <div className={styles.popUpHint}></div>
-          </Modal>
         </div>
 
         {status === STATUS_IN_PROGRESS ? <Button onClick={resetGame}>Начать заново</Button> : null}
@@ -306,6 +347,11 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
           />
         </div>
       ) : null}
+      {isHovered && (
+        <Modal>
+          <div className={styles.popUpHint}></div>
+        </Modal>
+      )}
     </div>
   );
 }
