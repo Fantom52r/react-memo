@@ -19,8 +19,6 @@ export function EndGameModal({ isWon, gameDurationSeconds, gameDurationMinutes, 
   const isLeader = isWon && Number(pairsCount) === thirdLevelPairs;
   const title = isLeader ? "Вы попали на лидерборд!" : isWon ? "Вы выйграли!" : "Вы проиграли!";
 
-  //const title = isWon ? "Вы выйграли!" : "Вы проиграли!";
-
   const imgSrc = isWon ? celebrationImageUrl : deadImageUrl;
 
   const imgAlt = isWon ? "celebration emodji" : "dead emodji";
