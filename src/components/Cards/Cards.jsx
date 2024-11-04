@@ -7,7 +7,6 @@ import { Button } from "../../components/Button/Button";
 import { Card } from "../../components/Card/Card";
 import { EasyContext } from "../../context/Context";
 import alohomora from "./images/alohomora.png";
-import showallcard from "./images/showallcard.png";
 import Modal from "../modal/Modal";
 
 // Игра закончилась
@@ -18,26 +17,10 @@ const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
 // Начало игры: игрок видит все карты в течении нескольких секунд
 const STATUS_PREVIEW = "STATUS_PREVIEW";
 
-const FIRST_HINT = {
-  title: "Прозрение",
-  description: "На 5 секунд показываются все карты. Таймер длительности игры на это время останавливается.",
-};
-
 const SECOND_HINT = {
   title: "Алохомора",
   description: " Открывается случайная пара карт.",
 };
-
-// const hintPopUp = ({ text }) => {
-//   return (
-//     <div className={styles.popUpHint}>
-//       <div className={styles.popUpHintContent}>
-//         <h2 className={styles.popUpHintContenTitle}>{text.title}</h2>
-//         <p className={styles.popUpHintContentDescription}></p>
-//       </div>
-//     </div>
-//   );
-// };
 
 function getTimerValue(startDate, endDate) {
   if (!startDate && !endDate) {
@@ -76,8 +59,6 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
   const [gameStartDate, setGameStartDate] = useState(null);
   // Дата конца игры
   const [gameEndDate, setGameEndDate] = useState(null);
-
-  // const [showHint, setShowHint] = useState({ isShow: false, text: "" });
 
   // Стейт для таймера, высчитывается в setInteval на основе gameStartDate и gameEndDate
   const [timer, setTimer] = useState({
@@ -229,22 +210,11 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
     };
   }, [gameStartDate, gameEndDate]);
 
-  // if (showHint.isShow) {
-  //   return (
-  //     <div className={styles.popUpHint}>
-  //       <div className={styles.popUpHintContent}>
-  //         <h2 className={styles.popUpHintContenTitle}>{showHint.title}</h2>
-  //         <p className={styles.popUpHintContentDescription}>{showHint.description}</p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
   const [isUsedHint, setIsUsedHint] = useState(0);
 
   const handleClickAlohomora = () => {
-    if (isUsedHint > 2) return;
+    if (isUsedHint > 2 || gameStartDate - gameEndDate === 0) return;
     setUsedHints(true);
-    console.log(cards);
     const obj = {};
     const filtredCards = cards.filter(element => !element.open);
     for (let i = 0; i < filtredCards.length; i++) {
@@ -255,7 +225,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
       }
     }
     const onlyPairsCards = Object.entries(obj).filter(([key, value]) => value === 2);
-    const randomPair = onlyPairsCards[Math.floor(Math.random() * onlyPairsCards.length)][0]; // Почему в этом случае лучше использовать Math.floor?
+    const randomPair = onlyPairsCards[Math.floor(Math.random() * onlyPairsCards.length)][0];
     const suitOfRandomPair = randomPair.split(" ")[0];
     const rankOfRandomPair = randomPair.split(" ")[1];
 
@@ -293,20 +263,6 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
           )}
         </div>
         <div className={styles.cheatBox}>
-          <button
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
-            onClick={() => setUsedHints(true)}
-            className={styles.showAllCard}
-          >
-            <img src={showallcard} alt="showallcard" />
-
-            <div className={`${styles.popUpHintContent} ${styles.popUpHintActiveFirst}`}>
-              <h2 className={styles.popUpHintContenTitle}>{FIRST_HINT.title}</h2>
-              <p className={styles.popUpHintContentDescription}>{FIRST_HINT.description}</p>
-            </div>
-          </button>
-
           <button
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}

@@ -15,7 +15,6 @@ const LeaderBoard = () => {
   useEffect(() => {
     getLeaders().then(data => {
       setLeaders([...leaders, ...data.sort((a, b) => a.time - b.time)]);
-      console.log(data);
     });
   }, []);
 
