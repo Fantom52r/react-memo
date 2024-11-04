@@ -6,6 +6,8 @@ import { EndGameModal } from "../../components/EndGameModal/EndGameModal";
 import { Button } from "../../components/Button/Button";
 import { Card } from "../../components/Card/Card";
 import { EasyContext } from "../../context/Context";
+import alohomora from "./images/alohomora.png";
+import Modal from "../modal/Modal";
 
 // Игра закончилась
 const STATUS_LOST = "STATUS_LOST";
@@ -14,6 +16,11 @@ const STATUS_WON = "STATUS_WON";
 const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
 // Начало игры: игрок видит все карты в течении нескольких секунд
 const STATUS_PREVIEW = "STATUS_PREVIEW";
+
+const SECOND_HINT = {
+  title: "Алохомора",
+  description: " Открывается случайная пара карт.",
+};
 
 function getTimerValue(startDate, endDate) {
   if (!startDate && !endDate) {
@@ -42,7 +49,7 @@ function getTimerValue(startDate, endDate) {
  * previewSeconds - сколько секунд пользователь будет видеть все карты открытыми до начала игры
  */
 export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
-  const { isEasyMode, tries, setTries } = useContext(EasyContext);
+  const { isEasyMode, tries, setTries, setUsedHints } = useContext(EasyContext);
   // В cards лежит игровое поле - массив карт и их состояние открыта\закрыта
   const [cards, setCards] = useState([]);
   // Текущий статус игры
@@ -58,6 +65,11 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
     seconds: 0,
     minutes: 0,
   });
+
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseOver = () => setIsHovered(true);
+  const handleMouseOut = () => setIsHovered(false);
 
   function finishGame(status = STATUS_LOST) {
     setGameEndDate(new Date());
@@ -198,6 +210,35 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
     };
   }, [gameStartDate, gameEndDate]);
 
+  const [isUsedHint, setIsUsedHint] = useState(0);
+
+  const handleClickAlohomora = () => {
+    if (isUsedHint > 2 || gameStartDate - gameEndDate === 0) return;
+    setUsedHints(true);
+    const obj = {};
+    const filtredCards = cards.filter(element => !element.open);
+    for (let i = 0; i < filtredCards.length; i++) {
+      if (obj[filtredCards[i].suit + " " + filtredCards[i].rank]) {
+        obj[filtredCards[i].suit + " " + filtredCards[i].rank] += 1;
+      } else {
+        obj[filtredCards[i].suit + " " + filtredCards[i].rank] = 1;
+      }
+    }
+    const onlyPairsCards = Object.entries(obj).filter(([key, value]) => value === 2);
+    const randomPair = onlyPairsCards[Math.floor(Math.random() * onlyPairsCards.length)][0];
+    const suitOfRandomPair = randomPair.split(" ")[0];
+    const rankOfRandomPair = randomPair.split(" ")[1];
+
+    const newCards = cards.map(el => {
+      if (el.suit === suitOfRandomPair && el.rank === rankOfRandomPair) {
+        return { ...el, open: true };
+      } else {
+        return el;
+      }
+    });
+    setIsUsedHint(prev => prev + 1);
+    setCards(newCards);
+  };
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -221,6 +262,21 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
             </>
           )}
         </div>
+        <div className={styles.cheatBox}>
+          <button
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            onClick={handleClickAlohomora}
+            className={styles.alohomora}
+          >
+            <img src={alohomora} alt="alohomora" />
+            <div className={`${styles.popUpHintContent} ${styles.popUpHintActiveSecond}`}>
+              <h2 className={styles.popUpHintContenTitle}>{SECOND_HINT.title}</h2>
+              <p className={styles.popUpHintContentDescription}>{SECOND_HINT.description}</p>
+            </div>
+          </button>
+        </div>
+
         {status === STATUS_IN_PROGRESS ? <Button onClick={resetGame}>Начать заново</Button> : null}
         {isEasyMode && <span>Колличество жизней: {tries}</span>}
       </div>
@@ -247,6 +303,11 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
           />
         </div>
       ) : null}
+      {isHovered && (
+        <Modal>
+          <div className={styles.popUpHint}></div>
+        </Modal>
+      )}
     </div>
   );
 }

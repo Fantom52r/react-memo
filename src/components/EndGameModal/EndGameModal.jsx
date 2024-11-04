@@ -5,10 +5,12 @@ import { Button } from "../Button/Button";
 import deadImageUrl from "./images/dead.png";
 import celebrationImageUrl from "./images/celebration.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { addLeader } from "../../API/leaders.js";
+import { EasyContext } from "../../context/Context.jsx";
 
 export function EndGameModal({ isWon, gameDurationSeconds, gameDurationMinutes, onClick }) {
+  const { achievements, setAchievements, usedHints, setUsedHints, setEasyMode } = useContext(EasyContext);
   const { pairsCount } = useParams();
   const [error, setError] = useState();
   const nav = useNavigate();
@@ -16,8 +18,6 @@ export function EndGameModal({ isWon, gameDurationSeconds, gameDurationMinutes, 
   const thirdLevelPairs = 9;
   const isLeader = isWon && Number(pairsCount) === thirdLevelPairs;
   const title = isLeader ? "Вы попали на лидерборд!" : isWon ? "Вы выйграли!" : "Вы проиграли!";
-
-  //const title = isWon ? "Вы выйграли!" : "Вы проиграли!";
 
   const imgSrc = isWon ? celebrationImageUrl : deadImageUrl;
 
@@ -35,9 +35,16 @@ export function EndGameModal({ isWon, gameDurationSeconds, gameDurationMinutes, 
       return;
     }
     try {
-      await addLeader({ name: leader.name, time: leader.time }).then(res => {
+      await addLeader({
+        name: leader.name,
+        time: leader.time,
+        achievements: usedHints ? achievements : [...achievements, 2],
+      }).then(res => {
         setAddLeader(res.leaders);
         nav("/leaderBoard");
+        setAchievements([]);
+        setUsedHints(false);
+        setEasyMode(false);
       });
     } catch (error) {
       setError(error.message);

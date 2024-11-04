@@ -39,6 +39,11 @@
   color: #999999;
 }
 
+.achievementsBox{
+  display: flex;
+  gap: 6px;
+}
+
 .firstColumn {
   width: 244px;
 }
@@ -48,7 +53,13 @@
 }
 
 .thirdColumn {
-  width: 102px;
+  width: 194px;
+  margin-right: 66px;
+
+}
+
+.fourthColumn {
+  width: 104px;
 }
 
 .leaderBoardTitle {

@@ -19,13 +19,17 @@ const levels = [
   },
 ];
 export function SelectLevelPage() {
-  const { isEasyMode, setEasyMode } = useContext(EasyContext);
+  const { isEasyMode, setEasyMode, achievements, setAchievements } = useContext(EasyContext);
   const [level, setLevel] = useState(3);
   const navigate = useNavigate();
   function onClick(value) {
     setLevel(value);
   }
   function onStart() {
+    if (level === 9 && !isEasyMode) {
+      setAchievements([...new Set([...achievements, 1])]);
+    }
+
     navigate(`/game/${level}`);
   }
   return (
@@ -34,7 +38,11 @@ export function SelectLevelPage() {
         <h1 className={styles.title}>Выбери сложность</h1>
         <ul className={styles.levels}>
           {levels.map(l => (
-            <li onClick={() => onClick(l.pairs)} className={clsx(styles.level, { [styles.active]: l.pairs === level })}>
+            <li
+              onClick={() => onClick(l.pairs)}
+              className={clsx(styles.level, { [styles.active]: l.pairs === level })}
+              key={l.level}
+            >
               <div className={styles.levelLink}>{l.level}</div>
             </li>
           ))}
